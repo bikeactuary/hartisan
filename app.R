@@ -7,7 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
-packages <- c("shiny", "DT", "dplyr", "magrittr", "stringi", "stringr",
+packages <- c("shiny", "DT", "dplyr", "magrittr", "stringi", "stringr", "sf",
               "leaflet", "tibble", "tidyverse", "shinydashboard", "dashboardthemes")
 sapply(packages, require, character.only = TRUE)
 
