@@ -7,9 +7,33 @@
 #    http://shiny.rstudio.com/
 #
 
-packages <- c("shiny", "DT", "dplyr", "magrittr", "stringi", "stringr",
+packages <- c("shiny", "DT", "dplyr", "magrittr", "stringi", "stringr", "sf",
               "leaflet", "tibble", "tidyverse", "shinydashboard", "dashboardthemes")
 sapply(packages, require, character.only = TRUE)
+
+sfPermits <- readRDS("permit_data.RDS") %>%
+    map(~mutate(., popup = paste0("<b>Permit Number:</b> ", permit_number, "<br>",
+                                  "<b>Work Class:</b> ", work_class, "<br>",
+                                  "<b>Permit Type:</b> ", permit_type, "<br>",
+                                  "<b>Division:</b> ", division, "<br>",
+                                  "<b>Address:</b> ", address, "<br>",
+                                  "<b>Value:</b> ", scales::dollar(value), "<br>",
+                                  "<b>Apply Date:</b> ", as.Date(apply_date), "<br>",
+                                  "<b>Status:</b> ", status, "<br>",
+                                  "<b>Issue Date:</b> ", as.Date(issue_date), "<br>",
+                                  "<b>Description:</b> ", work_description )) ) %>%
+    map(~mutate(., 
+                permit_type_grp = case_when(permit_type %in% c("Certificate of Approval", "Building (Residential)",
+                                                               "Building (Commercial)", "Demolition",
+                                                               "Building (Educational)") ~ "Building/Demo",
+                                            TRUE ~ "Systems/Other"),
+                apply_date = as.Date(apply_date),
+                issue_date = as.Date(issue_date),
+                expire_date = substr(expire_date, 1, 10) %>% na_if("") %>% as.Date(),
+                # value = scales::dollar(value),
+                applicant = case_when(is.na(global_entity_name) | stri_length(trimws(global_entity_name)) == 0 ~ paste0(last_name, ", ", first_name) %>% str_to_title(),
+                                      is.na(last_name) | stri_length(trimws(last_name)) == 0 ~ global_entity_name,
+                                      TRUE ~ paste0(paste0(last_name, ", ", first_name), "; ", global_entity_name)) ))
 
 ## define ui
 ui <- dashboardPage(
@@ -165,31 +189,6 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-    
-    sfPermits <- readRDS("permit_data.RDS") %>%
-        map(~mutate(., popup = paste0("<b>Permit Number:</b> ", permit_number, "<br>",
-                                      "<b>Work Class:</b> ", work_class, "<br>",
-                                      "<b>Permit Type:</b> ", permit_type, "<br>",
-                                      "<b>Division:</b> ", division, "<br>",
-                                      "<b>Address:</b> ", address, "<br>",
-                                      "<b>Value:</b> ", scales::dollar(value), "<br>",
-                                      "<b>Apply Date:</b> ", as.Date(apply_date), "<br>",
-                                      "<b>Status:</b> ", status, "<br>",
-                                      "<b>Issue Date:</b> ", as.Date(issue_date), "<br>",
-                                      "<b>Description:</b> ", work_description )) ) %>%
-        map(~mutate(., 
-                    permit_type_grp = case_when(permit_type %in% c("Certificate of Approval", "Building (Residential)",
-                                                                   "Building (Commercial)", "Demolition",
-                                                                   "Building (Educational)") ~ "Building/Demo",
-                                                TRUE ~ "Systems/Other"),
-                    apply_date = as.Date(apply_date),
-                    issue_date = as.Date(issue_date),
-                    expire_date = substr(expire_date, 1, 10) %>% na_if("") %>% as.Date(),
-                    # value = scales::dollar(value),
-                    applicant = case_when(is.na(global_entity_name) | stri_length(trimws(global_entity_name)) == 0 ~ paste0(last_name, ", ", first_name) %>% str_to_title(),
-                                          is.na(last_name) | stri_length(trimws(last_name)) == 0 ~ global_entity_name,
-                                          TRUE ~ paste0(paste0(last_name, ", ", first_name), "; ", global_entity_name)) ))
-    
     
     permits_mapped <- reactive({
         sfPermits[[1]] %>%
