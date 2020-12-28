@@ -209,8 +209,9 @@ server <- function(input, output) {
     output$permits_mapped = DT::renderDataTable({
         permits_mapped() %>%
             as_tibble() %>%
-            select(-c(popup, geometry)) %>%
-            DT::datatable(rownames = FALSE)
+            select(-c(key, unit_or_suite, parcelid, latitude, longitude, permit_type_grp, street, popup, geometry)) %>%
+            DT::datatable(rownames = FALSE) %>%
+            formatStyle(1:(ncol(permits_mapped())-2), fontSize = '12px')
     })
     
     pal <- colorFactor(
