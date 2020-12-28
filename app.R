@@ -211,7 +211,7 @@ server <- function(input, output) {
             as_tibble() %>%
             select(-c(key, unit_or_suite, parcelid, latitude, longitude, permit_type_grp, street, popup, geometry)) %>%
             DT::datatable(rownames = FALSE) %>%
-            formatStyle(1:(ncol(permits_mapped())-2), fontSize = '12px')
+            formatStyle(1:(ncol(permits_mapped())-2), fontSize = '10px')
     })
     
     pal <- colorFactor(
