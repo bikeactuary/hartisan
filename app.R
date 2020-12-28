@@ -250,8 +250,8 @@ server <- function(input, output) {
                         # fillColor = ~colorQuantile("YlOrRd", ALAND)(ALAND),
                         popup = ~name,
                         highlightOptions = highlightOptions(color = "white", weight = 2,
-                                                            bringToFront = TRUE)) %>%
-            addLegend("bottomright", pal = pal, values = permits_mapped()$permit_type_grp, title = "Permit Type Grouping")
+                                                            bringToFront = TRUE)) #%>%
+            # addLegend("bottomright", pal = pal, values = permits_mapped()$permit_type_grp, title = "Permit Type Grouping")
     })
     
     observe({
@@ -263,11 +263,12 @@ server <- function(input, output) {
             setView(lng = isolate(center()[1]),
                     lat = isolate(center()[2]),
                     zoom = isolate(zoom())) %>%
-            addCircleMarkers(data = permits_mapped(),
+            addAwesomeMarkers(data = permits_mapped(),
                              # radius = 6,
                              popup = ~popup,
-                             clusterOptions = markerClusterOptions(),
-                             color = ~pal(permit_type_grp) )
+                             clusterOptions = markerClusterOptions()
+                             # color = ~pal(permit_type_grp) 
+                             )
     })
 }
 
