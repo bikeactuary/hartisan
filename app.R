@@ -42,8 +42,8 @@ ui <- dashboardPage(
     ),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("Building Permits", tabName = "a", icon = icon("hammer")),
-            menuItem("Citizen Complaints (HPD)", tabName = "b", icon = icon("balance-scale-right"))
+            menuItem("Building Permits", tabName = "a", icon = icon("hammer"))
+            # menuItem("Citizen Complaints (HPD)", tabName = "b", icon = icon("balance-scale-right"))
             # menuItem("Large Losses", tabName = "large_losses", icon = icon("bomb"))
         )
     ),
@@ -77,7 +77,8 @@ ui <- dashboardPage(
                     ),
                     
                     br(),
-                    
+                    shinyWidgets::downloadBttn("downloadDat", label = "Download Table", style = "pill", color = "success", size = "sm", no_outline = FALSE),
+                    br(), br(),
                     DT::dataTableOutput("permits_mapped")
             ),
             
@@ -107,17 +108,21 @@ server <- function(input, output) {
             select(-c(geom, town, last_name, first_name, global_entity_name, expire_date, name)) %>%
             relocate(address, .after = permit_number) %>%
             relocate(unit_or_suite, .after = address) %>%
-            relocate(permit_type, .after = permit_number) %>%
+            relocate(status, .after = permit_number) %>%
+            relocate(permit_type, .after = status) %>%
             relocate(applicant, .after = permit_type) 
+        
         
     })
     
     output$permits_mapped = DT::renderDataTable({
         permits_mapped() %>%
             as_tibble() %>%
-            select(-c(key, unit_or_suite, parcelid, latitude, longitude, permit_type_grp, street, popup, geometry)) %>%
-            DT::datatable(rownames = FALSE) %>%
-            formatStyle(1:(ncol(permits_mapped())-2), fontSize = '10px')
+            select(-c(key, street, popup, geometry)) %>% #latitude, longitude, permit_type_grp, 
+            DT::datatable(rownames = FALSE,
+                          options = list(scrollX = TRUE)) %>%
+            formatStyle(1:(ncol(permits_mapped())-2), fontSize = '10px') %>%
+            formatCurrency(columns = "value")
     })
     
     pal <- colorFactor(
@@ -175,6 +180,14 @@ server <- function(input, output) {
                               # color = ~pal(permit_type_grp) 
             )
     })
+    
+    output$downloadDat <- downloadHandler(
+        filename =  paste0(sub('\\..*', '', "permits_"), format(Sys.time(),'_%Y%m%d_%H%M%S'), '.csv'),
+        content = function(file) {
+            write.csv(x = permits_mapped(), file = file)
+        }
+    )
+    
 }
 
 # Run the application 
