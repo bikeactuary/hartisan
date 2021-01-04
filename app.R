@@ -33,12 +33,12 @@ sfPermits <- readRDS("permit_data.RDS") %>%
 
 ## define ui
 ui <- dashboardPage(
-    dashboardHeader(title = "haRtisan"#,
-                    # tags$li(class = "dropdown",
-                    #         tags$a(href="https://add_link_to_something_later",
-                    #                tags$img(height = "19px", src="logo.png")
-                    #         )
-                    # )
+    dashboardHeader(title = "haRtisan",
+                    tags$li(class = "dropdown",
+                            tags$a(href="https://github.com/bikeactuary/hartisan",
+                                   tags$img(height = "30px", src="GitHub-Mark.png")
+                            )
+                    )
     ),
     dashboardSidebar(
         sidebarMenu(
