@@ -1,10 +1,5 @@
 #
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
+# haRtisan
 #
 
 packages <- c("shiny", "DT", "dplyr", "magrittr", "stringi", "stringr", "sf",
@@ -40,7 +35,7 @@ sfPermits <- readRDS("permit_data.RDS") %>%
 ui <- dashboardPage(
     dashboardHeader(title = "haRtisan"#,
                     # tags$li(class = "dropdown",
-                    #         tags$a(href="http://myprofile.munichre.com/Person.aspx?accountname=AMERICA%5Cn1207158",
+                    #         tags$a(href="https://add_link_to_something_later",
                     #                tags$img(height = "19px", src="logo.png")
                     #         )
                     # )
@@ -84,96 +79,6 @@ ui <- dashboardPage(
                     br(),
                     
                     DT::dataTableOutput("permits_mapped")
-                    # fluidRow(
-                    #     column(width=8,
-                    #            box(width = 12,
-                    #                title = h3("Rating Output"),
-                    #                status = "success",
-                    #                htmlOutput("rating"),
-                    #                br(),
-                    #                column(4, actionBttn("report",
-                    #                                     label = "Generate Report (PDF)",
-                    #                                     size = "sm",
-                    #                                     color = "primary",
-                    #                                     style = "jelly") ),
-                    #                br()
-                    #            ),
-                    #            
-                    #            box(width = 12,
-                    #                title = h3("MVP Submission Section"),
-                    #                status = "warning",
-                    #                actionBttn("butCalc", label = "Calculate", style = "pill", color = "royal", size = "sm"),
-                    #                downloadBttn("download_tasks", label = "Download", style = "pill", color = "success", size = "sm", no_outline = FALSE),
-                    #                br(),
-                    #                br(),
-                    #                div(id='hot_wordWrap', rHandsontableOutput("hot"))
-                    #            )
-                    #     ),
-                    #     box(width = 3,
-                    #         status = "warning",
-                    #         title = h3("Project Inputs"),
-                    #         textInput("cust_name",
-                    #                   "Customer Name (Specified Agreement Holders)",
-                    #                   value = ""),
-                    #         
-                    #         textAreaInput("proj_descr",
-                    #                       label = "Project Description",
-                    #                       value = "",
-                    #                       height = 72,
-                    #                       resize = "vertical"),
-                    #         
-                    #         numericInput("contract_val",
-                    #                      "Total Warranted Contract Value",
-                    #                      value = 1e5,
-                    #                      min = 0,
-                    #                      max = 1e7),
-                    #         sliderInput("mvp_pct",
-                    #                     "% Scored from MVP Submission",
-                    #                     value = 100,
-                    #                     min = 0,
-                    #                     max = 100,
-                    #                     step = 1,
-                    #                     post = "%"),
-                    #         htmlOutput("proj_pct"),
-                    #         br(),
-                    #         sliderInput("coins_pct",
-                    #                     "Coinsurance Provision (%)",
-                    #                     value = 10,
-                    #                     min = 0,
-                    #                     max = 50,
-                    #                     step = 5,
-                    #                     post = "%"),
-                    #         
-                    #         sliderInput("adj_pct",
-                    #                     "UW Risk Modifier (%)",
-                    #                     value = 0,
-                    #                     min = -50,
-                    #                     max = 100,
-                    #                     step = 1,
-                    #                     post = "%"),
-                    #         htmlOutput("mod_alert"),
-                    #         br(),
-                    #         numericInput("commis_pct",
-                    #                      "HSB Assoc. Commission",
-                    #                      value = .10,
-                    #                      min = 0,
-                    #                      max = .20,
-                    #                      step = .01),
-                    #         
-                    #         numericInput("freq",
-                    #                      "Assumed Base Claim Frequency",
-                    #                      value = .02,
-                    #                      min = .01,
-                    #                      max = 1,
-                    #                      step = .01),
-                    #         
-                    #         numericInput("lcm",
-                    #                      "Estimated Loss Cost Multiplier",
-                    #                      value = 3.0,
-                    #                      min = 2.0,
-                    #                      max = 5.0)
-                    #     )
-                    # )
             ),
             
             tabItem(tabName = "b"
@@ -251,7 +156,7 @@ server <- function(input, output) {
                         popup = ~name,
                         highlightOptions = highlightOptions(color = "white", weight = 2,
                                                             bringToFront = TRUE)) #%>%
-            # addLegend("bottomright", pal = pal, values = permits_mapped()$permit_type_grp, title = "Permit Type Grouping")
+        # addLegend("bottomright", pal = pal, values = permits_mapped()$permit_type_grp, title = "Permit Type Grouping")
     })
     
     observe({
@@ -264,11 +169,11 @@ server <- function(input, output) {
                     lat = isolate(center()[2]),
                     zoom = isolate(zoom())) %>%
             addAwesomeMarkers(data = permits_mapped(),
-                             # radius = 6,
-                             popup = ~popup,
-                             clusterOptions = markerClusterOptions()
-                             # color = ~pal(permit_type_grp) 
-                             )
+                              # radius = 6,
+                              popup = ~popup,
+                              clusterOptions = markerClusterOptions()
+                              # color = ~pal(permit_type_grp) 
+            )
     })
 }
 
