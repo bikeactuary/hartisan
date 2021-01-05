@@ -28,7 +28,8 @@ sfPermits <- readRDS("permit_data.RDS") %>%
                 # value = scales::dollar(value),
                 applicant = case_when(is.na(global_entity_name) | stri_length(trimws(global_entity_name)) == 0 ~ paste0(last_name, ", ", first_name) %>% str_to_title(),
                                       is.na(last_name) | stri_length(trimws(last_name)) == 0 ~ global_entity_name,
-                                      TRUE ~ paste0(paste0(last_name, ", ", first_name), "; ", global_entity_name)) ))
+                                      TRUE ~ paste0(paste0(last_name, ", ", first_name), "; ", global_entity_name)) )) %>%
+    arrange(desc(apply_date))
 
 
 ## define ui
