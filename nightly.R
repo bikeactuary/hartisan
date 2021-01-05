@@ -5,6 +5,7 @@ library(tidygeocoder)
 library(magrittr)
 library(cwi)
 library(sf)
+library(stringr)
 
 date <- Sys.Date() - 365
 url <- paste0("https://data.hartford.gov/resource/p2vw-4aab.csv?$where=apply_date>'", date, "'")
