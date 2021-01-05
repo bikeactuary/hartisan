@@ -35,7 +35,7 @@ sfPermits <- readRDS("permit_data.RDS") %>%
 ui <- dashboardPage(
     dashboardHeader(title = "haRtisan",
                     tags$li(class = "dropdown",
-                            tags$a(href="https://github.com/bikeactuary/hartisan",
+                            tags$a(href="https://github.com/bikeactuary/hartisan", target="_blank",
                                    tags$img(height = "30px", src="GitHub-Mark.png")
                             )
                     )
@@ -60,7 +60,7 @@ ui <- dashboardPage(
                                selectizeInput("hood", "Neighborhood(s):", choices = unique(sfPermits[[1]]$name), multiple = TRUE, selected = "Asylum Hill"),
                                dateRangeInput("daterng", "Application Date Range:",
                                               start = "2019-01-01",
-                                              end   = "2020-12-31"),
+                                              end   = Sys.Date()),
                                shinyWidgets::numericRangeInput("valuerng", "Job Value ($):", value = c(0, max(sfPermits[[1]]$value, na.rm = T) ) ),
                                checkboxGroupInput("class", "Work Class:", 
                                                   choices = sfPermits[[1]]$work_class %>% unique,
