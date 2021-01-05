@@ -99,7 +99,7 @@ server <- function(input, output) {
     
     permits_mapped <- reactive({
         sfPermits[[1]] %>%
-            filter(name == input$hood) %>%
+            filter(name %in% input$hood) %>%
             filter(apply_date >= input$daterng[1] & apply_date <= input$daterng[2]) %>%
             filter(value >= input$valuerng[1] & value <= input$valuerng[2]) %>%
             filter(permit_type %in% input$ptype) %>%
